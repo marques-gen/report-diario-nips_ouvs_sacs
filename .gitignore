@@ -1,6 +1,6 @@
-.data/
-.data-viz/
-.venv/
+data/
+data-viz/
+venv/
 .env
 auth/*.json
 auth_state.json
