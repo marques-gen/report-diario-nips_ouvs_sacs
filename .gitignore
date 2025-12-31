@@ -1,7 +1,20 @@
-data/
-data-viz/
+# Dados
+data/*
+!data/.gitkeep
+
+data-viz/*
+!data-viz/.gitkeep
+
+# Ambiente virtual
 venv/
+.venv/
+
+# Segredos
 .env
-auth/*.json
+
+# Autenticação
+auth/*
+!auth/.gitkeep
+
 auth_state.json
 
