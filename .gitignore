@@ -1,0 +1,6 @@
+.data/
+.data-viz/
+.venv/
+.env
+auth/*.json
+
