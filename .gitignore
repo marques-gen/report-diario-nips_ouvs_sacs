@@ -3,4 +3,5 @@
 .venv/
 .env
 auth/*.json
+auth_state.json
 
