@@ -1,76 +1,36 @@
-import os
-from dotenv import load_dotenv
-from playwright.sync_api import sync_playwright
-from atualiza_consulta import atualizar_consultas_excel
-from captura_imagem import selecionar_intervalo_nomeado, capturar_intervalo,converter_para_jpg
-from envia_mensagem_whats import abrir_whatsapp,enviar_imagem_whatsapp
+from atualizar_report import gerar_imagem_do_relatorio
+from enviar_report_whatsapp import enviar_mensagem_com_imagem
 
-load_dotenv()
+CAMINHO_ARQUIVO = r"C:\projects-soluctions\report-diario-nips_ouvs_sacs\data\Report_Diário-Nips_Ouvs_Sacs.xlsx"
+DESTINO_IMAGEM=r"C:\projects-soluctions\report-diario-nips_ouvs_sacs\data-viz\report_diario.png"
 
-EXCEL_URL = os.getenv("EXCEL_URL")
-AUTH_FILE = "auth_state.json"
+CONTATO = "MCP - Melhoria e Controle de Processos"
 
-with sync_playwright() as p:
-    browser = p.chromium.launch(
-        headless=False,
-        slow_mo=50
+MENSAGEM = """
+*Report TESTE - validar números/Regras*
+
+Dr. Jorge, segue reporte diário de SAC, NIPs e Ouvidoria.
+
+
+"""
+
+IMAGEM = DESTINO_IMAGEM
+
+
+if __name__ == "__main__":
+    
+    gerar_imagem_do_relatorio(
+        caminho_arquivo=CAMINHO_ARQUIVO,
+        nome_aba="Report1",
+        intervalo="B2:N9",
+        destino_imagem=DESTINO_IMAGEM,
+        excel_visivel=False
     )
 
-    # Usa sessão persistida (SEM LOGIN)
-    context = browser.new_context(storage_state=AUTH_FILE)
-    page = context.new_page()
-
-    # 1 Abre direto o Excel Online
-    page.goto(EXCEL_URL)
-
-    # 2 Caso esteja em modo leitura → Editar
-    try:
-        editar = page.get_by_role("button", name="Editar")
-        if editar.count() > 0:
-            editar.click()
-            page.wait_for_timeout(3000)
-    except:
-        pass
-
-    # 3 Aguarda iframe do Excel
-    page.wait_for_selector("iframe[name^='WacFrame_Excel']", timeout=60000)
-    page.wait_for_timeout(5000)
-
-    # Debug visual
-    page.screenshot(path="excel_carregado.png", full_page=True)
-
-    # 4 Atualiza consultas
-    print("Atualizando consultas no Excel Online...")
-    atualizar_consultas_excel(page)
-
-    # 5 Aguarda finalizar (Excel é assíncrono)
-    print("Aguardando Excel finalizar atualização...")
-    page.wait_for_timeout(30000)  # ajuste conforme tempo real
-
-    print("Planilha atualizada com sucesso")
-#===============================================================================
-
-    MENSAGEM = """
-                *Relatório Diário*
-
-                Segue abaixo o status atualizado.
-
-                """
+    enviar_mensagem_com_imagem(
+        contato=CONTATO,
+        mensagem=MENSAGEM,
+        imagem=IMAGEM
+    )
 
 
-    # Excel
-    selecionar_intervalo_nomeado(page, "report1")
-    capturar_intervalo(page, "relatorio.png")
-
-    # WhatsApp
-    abrir_whatsapp(page)
-    converter_para_jpg("relatorio.png", "relatorio.jpg")
-    enviar_imagem_whatsapp(
-    page,
-    contato="Link conteudo",
-    imagem="relatorio.jpg",
-    mensagem=MENSAGEM
-)
-    #page.wait_for_timeout(5000)
-    input("Mensagem enviada. Pressione ENTER para fechar.")
-    browser.close()
