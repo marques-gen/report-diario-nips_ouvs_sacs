@@ -22,7 +22,7 @@ if __name__ == "__main__":
     gerar_imagem_do_relatorio(
         caminho_arquivo=CAMINHO_ARQUIVO,
         nome_aba="Report1",
-        intervalo="B2:N9",
+        intervalo="A2:O9",
         destino_imagem=DESTINO_IMAGEM,
         excel_visivel=False
     )
