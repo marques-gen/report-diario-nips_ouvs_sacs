@@ -18,9 +18,9 @@ DEFAULT_PAUSE = 0.5
 # CONFIGURAÇÕES DE COORDENADAS
 
 # ===============================
-COORD_SEARCH = (204, 333)
-COORD_ATTACH = (919, 1068)
-COORD_PHOTO_VIDEO = (903, 596)
+COORD_SEARCH = (207, 254)
+COORD_ATTACH = (925, 1070)
+COORD_PHOTO_VIDEO = (910, 682)
 
 
 # ===============================
