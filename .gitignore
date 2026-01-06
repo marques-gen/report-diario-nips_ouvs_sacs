@@ -18,3 +18,5 @@ auth/*
 
 auth_state.json
 
+__pycache__/
+
